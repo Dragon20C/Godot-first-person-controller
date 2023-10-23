@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3 uid="uid://nlunx2l6yljq"]
+
+[ext_resource type="Script" path="res://Data/Scripts/player.gd" id="1_uf465"]
+[ext_resource type="Script" path="res://Data/Scripts/Motion.gd" id="2_7p1od"]
+[ext_resource type="AudioStream" uid="uid://bswq5ifcck45k" path="res://Data/Audio/Footsteps/Stone/step_1.wav" id="3_blg80"]
+[ext_resource type="AudioStream" uid="uid://c44cfvjtv8lpv" path="res://Data/Audio/Footsteps/Stone/step_2.wav" id="4_axn5d"]
+[ext_resource type="AudioStream" uid="uid://bfmtp3yrkrawm" path="res://Data/Audio/Footsteps/Stone/step_3.wav" id="5_x37x2"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_0b3bm"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vkl1l"]
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("Head", "CameraSocket")]
+script = ExtResource("1_uf465")
+Head = NodePath("Head")
+CameraSocket = NodePath("Head/CameraSocket")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_0b3bm")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="CameraSocket" type="Node3D" parent="Head"]
+
+[node name="Camera3D" type="Camera3D" parent="Head/CameraSocket"]
+
+[node name="Marker3D" type="Marker3D" parent="Head/CameraSocket"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_vkl1l")
+
+[node name="MotionNode" type="Node" parent="." node_paths=PackedStringArray("Camera", "Marker", "Player", "feet_audio_player")]
+script = ExtResource("2_7p1od")
+Camera = NodePath("../Head/CameraSocket/Camera3D")
+Marker = NodePath("../Head/CameraSocket/Marker3D")
+Player = NodePath("..")
+feet_audio_player = NodePath("../FeetAudioEmitter")
+footstep_sounds = Array[AudioStreamWAV]([ExtResource("3_blg80"), ExtResource("4_axn5d"), ExtResource("5_x37x2")])
+
+[node name="FeetAudioEmitter" type="AudioStreamPlayer3D" parent="."]
