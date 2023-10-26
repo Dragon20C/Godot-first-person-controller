@@ -21,11 +21,10 @@ var stepped : bool = false
 var time : float = 0.0
 
 func _physics_process(delta):
-		
 	if enable_headbob:
 		if Player.velocity.length() > 0 and Player.is_on_floor():
-			time += delta * Player.velocity.length() * float(Player.is_on_floor())
-			Camera.transform.origin = Motion()
+			time += delta * Player.velocity.length()
+			Camera.transform.origin = lerp(Camera.transform.origin,Motion(),20 * delta)
 			if enable_stab:
 				Camera.look_at(Marker.global_position)
 		else:
@@ -50,7 +49,7 @@ func CanPlayFootStep(y_value : float):
 	if y_value < 0 and !stepped:
 		PlayFootStepSound()
 		stepped = true
-	elif y_value >0 and stepped:
+	elif y_value > 0 and stepped:
 		stepped = false
 
 func PlayFootStepSound():
